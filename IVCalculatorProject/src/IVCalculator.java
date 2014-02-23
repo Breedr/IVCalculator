@@ -1,6 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
-
 
 public class IVCalculator {
 
@@ -10,35 +10,70 @@ public class IVCalculator {
 		printMap("Parent B", parentB);
 
 		//Calculate all possible combo - assuming 6IV hand down;
-		
-		List<List<Boolean>> results = new ArrayList<List<Boolean>>();
-		recursivelyCombine(results, new ArrayList<Boolean>(), parentA, parentB, 0);
-		
-		for(List<Boolean> l : results){
-			
-			printMap(l);
-			
-		}
-		
-	}
-	
-	private static void recursivelyCombine(List<List<Boolean>> result, List<Boolean> current, List<Boolean> in1, List<Boolean> in2, int index) {
-	    if (index == in1.size()) {
-	        result.add(current);
-	    } else {
-	        if (in1.get(index).equals(in2.get(index))) {
-	           current.add(in1.get(index));
-	           recursivelyCombine(result, current, in1, in2, index+1);
-	        } else {
-	           List<Boolean> temp = new ArrayList<Boolean>(current);
-	           temp.add(Boolean.TRUE);
-	           recursivelyCombine(result, temp, in1, in2, index+1);
 
-	           temp = new ArrayList<Boolean>(current);
-	           temp.add(Boolean.FALSE);
-	           recursivelyCombine(result, temp, in1, in2, index+1);
-	        }
-	    }
+		ArrayList<List<Boolean>> initialResults = new ArrayList<List<Boolean>>();
+		recursivelyCombine(initialResults, new ArrayList<Boolean>(), parentA, parentB, 0);
+
+		ArrayList<List<Boolean>> finalResults = new ArrayList<List<Boolean>>();
+
+
+
+				for(List<Boolean> list : initialResults){
+		
+					ArrayList<List<Boolean>> resultRandomAdded = new ArrayList<List<Boolean>>();
+					
+					//LIST OF TRUE IS INCORRECT
+					//Require to add lists with each false changed to true (only one change per list)
+					recursivelyCombine(resultRandomAdded,  new ArrayList<Boolean>(), list, listOfTrue(list), 0);
+		
+					finalResults.addAll(resultRandomAdded);
+		
+				}
+		
+				removeDulpicates(finalResults);
+		
+				printResults(finalResults);
+
+
+	}
+
+	private static List<Boolean> listOfTrue(List<Boolean> list) {
+		ArrayList<Boolean> trueList = new ArrayList<Boolean>();
+		for(int x = 0; x < list.size(); x++){
+			trueList.add(true);
+		}
+		return trueList;
+	}
+
+	private static void printResults(ArrayList<List<Boolean>> results) {
+		for(List<Boolean> list : results){
+			printMap(list);
+		}
+	}
+
+
+
+	private static ArrayList<List<Boolean>> removeDulpicates(ArrayList<List<Boolean>> input){
+		return new ArrayList<List<Boolean>>(new LinkedHashSet<List<Boolean>>(input));
+	}
+
+	private static void recursivelyCombine(ArrayList<List<Boolean>> resultSet, List<Boolean> current, List<Boolean> listOne, List<Boolean> listTwo, int index) {
+		if (index == listOne.size()) {
+			resultSet.add(current);
+		} else {
+			if (listOne.get(index).equals(listTwo.get(index))) {
+				current.add(listOne.get(index));
+				recursivelyCombine(resultSet, current, listOne, listTwo, index+1);
+			} else {
+				List<Boolean> temp = new ArrayList<Boolean>(current);
+				temp.add(Boolean.TRUE);
+				recursivelyCombine(resultSet, temp, listOne, listTwo, index+1);
+
+				temp = new ArrayList<Boolean>(current);
+				temp.add(Boolean.FALSE);
+				recursivelyCombine(resultSet, temp, listOne, listTwo, index+1);
+			}
+		}
 	}
 
 	protected static void printMap(List<Boolean> map) {

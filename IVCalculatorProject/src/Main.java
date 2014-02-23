@@ -15,7 +15,7 @@ public class Main {
 		generateParentB();
 		
 		IVCalculator.calculate(parentA, parentB);
-
+		
 	}
 
 	private static void generateParentB() {
