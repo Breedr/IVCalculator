@@ -16,8 +16,6 @@ public class IVCalculator {
 
 		ArrayList<List<Boolean>> finalResults = new ArrayList<List<Boolean>>();
 
-
-
 				for(List<Boolean> list : initialResults){
 		
 					ArrayList<List<Boolean>> resultRandomAdded = new ArrayList<List<Boolean>>();
